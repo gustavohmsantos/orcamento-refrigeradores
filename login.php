@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Verificar se o usuário está logado
+if (isset($_SESSION['user_id'])) {
+  header("Location: index.php");
+  exit();
+}
+
 $host = "localhost";
 $user = "root";
 $password = "";
