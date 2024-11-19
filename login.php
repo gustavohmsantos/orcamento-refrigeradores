@@ -79,40 +79,5 @@ $conn->close();
       <img src="./assets/images/login.png" alt="cartões e uma caneta da IGE-TEC">
     </div>
   </main>
-  <script>
-
-    const inputs = document.querySelectorAll("input");
-
-    inputs.forEach((input) => {
-      input.addEventListener("blur", validateLogin)
-    })
-
-    function validateLogin() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      let errorEmail = document.getElementById("error-email");
-      let errorPassword = document.getElementById("error-password");
-
-      errorEmail.textContent = "";
-      errorPassword.textContent = "";
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      let isValid = true;
-
-      if (email === "" || !emailRegex.test(email)) {
-          errorEmail.textContent = "Por favor, digite um email válido.";
-          isValid = false;
-      }
-
-      if (password === "" || password.length < 5) {
-          errorPassword.textContent = "Por favor, digite uma senha válida";
-          isValid = false;
-      }
-      
-      return isValid;
-    }
-  </script>
 </body>
 </html>
