@@ -31,10 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: index.php");
             exit();
         } else {
-            $error = "Senha incorreta.";
+            $errorPassword = "Senha incorreta.";
         }
     } else {
-        $error = "E-mail não encontrado.";
+        $errorEmail = "E-mail não encontrado.";
     }
 }
 
@@ -62,17 +62,18 @@ $conn->close();
         <fieldset>
           <label class="font-1-xs" for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="Insira seu E-mail">
-          <span id="error-email" class="error-span font-1-xs"></span>
+          <?php if (!empty($errorEmail)): ?>
+            <span id="error-email" class="error-span font-1-xs"><?php echo htmlspecialchars($errorEmail); ?></span>
+          <?php endif; ?>
         </fieldset>
         <fieldset>
           <label class="font-1-xs" for="password">Senha</label>
           <input type="password" id="password" name="password" placeholder="Insira sua senha">
-          <span id="error-password" class="error-span font-1-xs"></span>
+          <?php if (!empty($errorPassword)): ?>
+            <span id="error-password" class="error-span font-1-xs"><?php echo htmlspecialchars($errorPassword); ?></span>
+          <?php endif; ?>
         </fieldset>
         <button class="login__button--submit font-1-xs" type="submit">Login</button>
-        <?php if (!empty($error)): ?>
-          <span class="error-span font-1-xs"><?php echo htmlspecialchars($error); ?></span>
-        <?php endif; ?>
       </form>
     </div>
     <div class="login__image">
