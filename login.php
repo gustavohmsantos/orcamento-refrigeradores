@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </div>
       <h1 class="font-1-xxl">Login</h1>
       <p class="font-1-s">Entre para acessar seu sistema de gestão.</p>
-      <form class="login-form" method="POST" onsubmit="return validateLogin()" action="login.php">
+      <form class="login-form" method="POST" action="login.php">
         <fieldset>
           <label class="font-1-xs" for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="Insira seu E-mail">
