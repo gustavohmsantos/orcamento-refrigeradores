@@ -6,6 +6,7 @@ main {
   align-items: center;
   justify-content: center;
   margin: 20px;
+  padding-bottom: 120px;
 }
 
 main > section {
@@ -76,4 +77,15 @@ fieldset > input {
 .input-error {
   border: 1px solid red;
   background-color: #ffe6e6;
+}
+
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .buscar-btn {
+    align-self: flex-start;
+  }
 }

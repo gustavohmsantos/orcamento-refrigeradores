@@ -100,7 +100,7 @@
         <ul class="sub-menu">
           <div>
             <li class="active font-2-s"><a href="./cadastrar.php">Cadastrar</a></li>
-            <li><a href="./visualizar.php" class="font-2-s">Visualizar</a></li>
+            <li class="font-2-s"><a href="./visualizar.php">Visualizar</a></li>
           </div>
         </ul>
       </li>

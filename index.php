@@ -73,8 +73,8 @@ $total_clientes = $stmt->fetchColumn();
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="./clientes/cadastrar.php" class="font-2-s">Cadastrar</a></li>
-            <li><a href="./clientes/visualizar.php" class="font-2-s">Visualizar</a></li>
+            <li class="font-2-s"><a href="./clientes/cadastrar.php" >Cadastrar</a></li>
+            <li class="font-2-s"><a href="./clientes/visualizar.php" >Visualizar</a></li>
           </div>
         </ul>
       </li>

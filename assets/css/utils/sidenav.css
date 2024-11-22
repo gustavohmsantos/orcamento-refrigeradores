@@ -37,9 +37,6 @@ body {
   
   justify-content: flex-end;
   margin-bottom: 16px;
-  .logo {
-    font-weight: 600;
-  }
 }
 
 #sidebar ul li.active > a,
@@ -50,7 +47,7 @@ body {
   }
 }
 
-#sidebar a, #sidebar .dropdown-btn, #sidebar .logo {
+#sidebar a, #sidebar .dropdown-btn {
   border-radius: .5em;
   padding: .85em;
   text-decoration: none;
