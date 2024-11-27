@@ -1,0 +1,121 @@
+@import url('../utils/sidenav.css');
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  padding-bottom: 120px;
+}
+
+main > section {
+  background: #F3F3F3;
+  border-radius: 60px;
+  box-shadow: 3px 3px 100px rgba(0, 0, 0, 0.243);
+  padding: 60px;
+}
+
+main > section h1 {
+  text-align: center;
+  margin-bottom: 60px;
+  color: var(--cor-1);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.required {
+  color: red;
+}
+
+.form-row {
+  display: flex;
+  align-items: start;
+  gap: 20px;
+}
+
+.form-row > fieldset {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+fieldset > input {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid var(--cor-4);
+}
+
+.buscar-btn {
+  background: var(--cor-5);
+  border: 3px solid var(--cor-1);
+  color: var(--cor-1);
+  padding: 8px 16px;
+  border-radius: 0.5em;
+  max-width: max-content;
+  max-height: max-content;
+  align-self: flex-end;
+}
+
+.submit-btn {
+  background: var(--cor-1);
+  color: var(--cor-5);
+  padding: 8px;
+  border-radius: 0.5em;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .buscar-btn {
+    align-self: flex-start;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+thead {
+  background-color: var(--cor-1);
+  color: white;
+}
+
+thead th {
+  padding: 12px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody td {
+  padding: 12px;
+}
+
+tbody a {
+  color: var(--cor-1);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+tbody a:hover {
+  text-decoration: underline;
+}

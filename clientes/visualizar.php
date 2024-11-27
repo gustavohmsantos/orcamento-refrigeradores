@@ -68,6 +68,24 @@
     </ul>
   </nav>
   <main>
+      <section>
+        <h1>Clientes cadastrados</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>CNPJ/CPF</th>
+                    <th>Bairro</th>
+                    <th>Cadastrado</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </section>  
   </main>
 </body>
 </html>

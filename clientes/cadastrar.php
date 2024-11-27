@@ -72,7 +72,7 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/pages/cadastrar.css">
   <script type="text/javascript" src="../assets/js/script.js" defer></script>
-  <title>Home | IGE-TEC</title>
+  <title>Cadastrar | IGE-TEC</title>
 </head>
 <body class="container">
   <nav id="sidebar">
