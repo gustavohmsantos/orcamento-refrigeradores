@@ -1,27 +1,49 @@
 <?php
-  session_start();
+session_start();
 
-  $inactiveTime = 600;
+// Verifique o caminho correto para o arquivo de conexão
+include '../config/connection.php'; // Caminho correto para o arquivo de conexão
 
-  if (isset($_SESSION['ultimo_acesso'])) {
+// Tempo de inatividade permitido (em segundos)
+$inactiveTime = 600;
+
+// Controle de sessão
+if (isset($_SESSION['ultimo_acesso'])) {
     $currentTime = time() - $_SESSION['ultimo_acesso'];
 
     if ($currentTime > $inactiveTime) {
-      session_unset();
-      session_destroy();
-      header("Location: ../login.php?session_expired=1");
-      exit();
+        session_unset();
+        session_destroy();
+        header("Location: ../login.php?session_expired=1");
+        exit();
     }
-  }
+}
 
-  $_SESSION['ultimo_acesso'] = time();
+$_SESSION['ultimo_acesso'] = time();
 
-  if (!isset($_SESSION['user_id'])) {
+// Verifica se o usuário está logado
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
-  }
+}
 
-  include '../config/connection.php';
+try {
+    // Consulta para buscar os dados dos clientes
+    $sql = "SELECT 
+                id_cliente AS id, 
+                nome, 
+                telefone, 
+                COALESCE(cnpj, cpf) AS documento, 
+                bairro, 
+                data_cadastro 
+            FROM clientes 
+            WHERE ativo = 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erro ao buscar dados: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +53,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="../assets/images/favicon.svg">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/pages/cadastrar.css">
+  <link rel="stylesheet" href="../assets/css/pages/visualizar.css">
   <script type="text/javascript" src="../assets/js/script.js" defer></script>
   <title>Home | IGE-TEC</title>
 </head>
@@ -68,24 +90,35 @@
     </ul>
   </nav>
   <main>
-      <section>
-        <h1>Clientes cadastrados</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Telefone</th>
-                    <th>CNPJ/CPF</th>
-                    <th>Bairro</th>
-                    <th>Cadastrado</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
+      <section class="tabela-clientes">
+        <h1 class="font-1-xl">Lista de Clientes</h1>
+        <table class="clientes-tabela">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>CNPJ/CPF</th>
+              <th>Bairro</th>
+              <th>Cadastrado</th>
+              <th>Ação</th>
+            </tr> 
+          </thead>
+          <tbody id="clientes-tbody">
+            <?php foreach ($clientes as $cliente): ?>
+            <tr>
+              <td><?= htmlspecialchars($cliente['id']) ?></td>
+              <td><?= htmlspecialchars($cliente['nome']) ?></td>
+              <td><?= htmlspecialchars($cliente['telefone']) ?></td>
+              <td><?= htmlspecialchars($cliente['documento']) ?></td>
+              <td><?= htmlspecialchars($cliente['bairro']) ?></td>
+              <td><?= htmlspecialchars($cliente['data_cadastro']) ?></td>
+              <td><a href="editar.php?id=<?= $cliente['id'] ?>">Editar</a></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
         </table>
-    </section>  
+      </section>
   </main>
 </body>
 </html>
