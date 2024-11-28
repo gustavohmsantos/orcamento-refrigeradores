@@ -23,6 +23,30 @@
 
   include '../config/connection.php';
 
+  $cliente = [];
+  if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    $sql = "SELECT * FROM clientes WHERE id_cliente = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+      $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$cliente) {
+        header("Location: visualizar.php?status=nao_encontrado");
+        exit();
+      }
+    } else {
+      header("Location: visualizar.php?status=erro");
+      exit();
+    }
+  } else {
+    header("Location: visualizar.php?status=sem_id");
+    exit();
+  }
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $cpf = !empty($_POST['cpf']) ? $_POST['cpf'] : NULL;
@@ -36,8 +60,10 @@
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
 
-    $sql = "INSERT INTO clientes (nome, cpf, cnpj, email, telefone, cep, rua, numero, bairro, cidade, estado, data_cadastro, ativo) 
-            VALUES (:nome, :cpf, :cnpj, :email, :telefone, :cep, :rua, :numero, :bairro, :cidade, :estado, NOW(), 1)";
+    $sql = "UPDATE clientes 
+    SET nome = :nome, cpf = :cpf, cnpj = :cnpj, email = :email, telefone = :telefone, 
+        cep = :cep, rua = :rua, numero = :numero, bairro = :bairro, cidade = :cidade, estado = :estado 
+    WHERE id_cliente = :id";
 
     try {
       $stmt = $pdo->prepare($sql);
@@ -52,12 +78,14 @@
       $stmt->bindParam(':bairro', $bairro);
       $stmt->bindParam(':cidade', $cidade);
       $stmt->bindParam(':estado', $estado);
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
       $stmt->execute();
-      header("Location: cadastrar.php?status=sucesso");
+      header("Location: editar.php?id=" . $_GET['id'] . "&status=sucesso");
       exit();
     } catch (PDOException $e) {
-      header("Location: cadastrar.php?status=erro");
+      $erro = urlencode($e->getMessage()); // Codifica o erro para ser enviado na URL
+      header("Location: editar.php?id=" . $_GET['id'] . "&status=erro&mensagem=" . $erro);
       exit();
     }
   }
@@ -99,7 +127,7 @@
         </button>
         <ul class="sub-menu">
           <div>
-            <li class="active font-2-s"><a href="./cadastrar.php">Cadastrar</a></li>
+            <li class="font-2-s"><a href="./cadastrar.php">Cadastrar</a></li>
             <li class="font-2-s"><a href="./visualizar.php">Visualizar</a></li>
           </div>
         </ul>
@@ -108,79 +136,78 @@
   </nav>
   <main>
     <section>
-      <h1 class="font-1-xl">Cadastro de Clientes</h1>
-      <form class="cadastrar-form" method="POST" action="./cadastrar.php">
+      <h1 class="font-1-xl">Edição do cliente: <?= htmlspecialchars($cliente['id_cliente']) ?></h1>
+      <form class="cadastrar-form" method="POST" action="./editar.php?id=<?= htmlspecialchars($id) ?>">
         <div class="form-row">
           <fieldset>
             <label class="font-1-s" for="nome">Nome<span class="required"> *</span></label>
-            <input id="nome" class="font-1-xs" type="text" name="nome" placeholder="Nome">
+            <input id="nome" class="font-1-xs" type="text" name="nome" placeholder="Nome" value="<?= htmlspecialchars($cliente['nome']) ?>">
             <span id="error-nome" class="error-span font-1-xs" style="display: none;">Nome inválido!</span>
           </fieldset>
         </div>
         <div class="form-row">
           <fieldset>
             <label class="font-1-s" for="cpf">CPF</label>
-            <input id="cpf" class="font-1-xs" type="text" name="cpf" placeholder="CPF">
+            <input id="cpf" class="font-1-xs" type="text" name="cpf" placeholder="CPF" value="<?= htmlspecialchars($cliente['cpf']) ?>">
           </fieldset>
           <fieldset>
             <label class="font-1-s" for="cnpj">CNPJ</label>
-            <input id="cnpj" class="font-1-xs" type="text" name="cnpj" placeholder="CNPJ">
+            <input id="cnpj" class="font-1-xs" type="text" name="cnpj" placeholder="CNPJ" value="<?= htmlspecialchars($cliente['cnpj']) ?>">
           </fieldset>
         </div>
         <div class="form-row">
           <fieldset>
             <label class="font-1-s" for="email">Email</label>
-            <input id="email" class="font-1-xs" type="email" name="email" placeholder="Email">
+            <input id="email" class="font-1-xs" type="email" name="email" placeholder="Email" value="<?= htmlspecialchars($cliente['email']) ?>">
             <span id="error-email" class="error-span font-1-xs" style="display: none;">Email inválido!</span>
           </fieldset>
           <fieldset> 
             <label class="font-1-s" for="telefone">Telefone<span class="required"> *</span></label>
-            <input id="telefone" class="font-1-xs" type="text" name="telefone" placeholder="Telefone">
+            <input id="telefone" class="font-1-xs" type="text" name="telefone" placeholder="Telefone" value="<?= htmlspecialchars($cliente['telefone']) ?>">
             <span id="error-telefone" class="error-span font-1-xs" style="display: none;">Telefone inválido!</span>
           </fieldset>
         </div>
         <div class="form-row">
           <fieldset> 
             <label class="font-1-s" for="cep">CEP</label>
-            <input id="cep" class="font-1-xs" type="text" name="cep" placeholder="CEP">
+            <input id="cep" class="font-1-xs" type="text" name="cep" placeholder="CEP" value="<?= htmlspecialchars($cliente['cep']) ?>">
           </fieldset>
           <button id="buscar-cep-btn" onclick="buscarCEP()" class="buscar-btn font-1-xs" type="button">Buscar</button>
         </div>
         <div class="form-row">
           <fieldset>
             <label class="font-1-s" for="rua">Rua<span class="required"> *</span></label>
-            <input id="rua" class="font-1-xs" type="text" name="rua" placeholder="Rua">
+            <input id="rua" class="font-1-xs" type="text" name="rua" placeholder="Rua" value="<?= htmlspecialchars($cliente['rua']) ?>">
             <span id="error-rua" class="error-span font-1-xs" style="display: none;">Rua inválida!</span>
           </fieldset>
           <fieldset> 
             <label class="font-1-s" for="numero">Número<span class="required"> *</span></label>
-            <input id="numero" class="font-1-xs" type="text" name="numero" placeholder="Número">
+            <input id="numero" class="font-1-xs" type="text" name="numero" placeholder="Número" value="<?= htmlspecialchars($cliente['numero']) ?>">
             <span id="error-numero" class="error-span font-1-xs" style="display: none;">Número inválido!</span>
           </fieldset>
         </div>
         <div class="form-row">
           <fieldset> 
             <label class="font-1-s" for="bairro">Bairro<span class="required"> *</span></label>
-            <input id="bairro" class="font-1-xs" type="text" name="bairro" placeholder="Bairro">
+            <input id="bairro" class="font-1-xs" type="text" name="bairro" placeholder="Bairro" value="<?= htmlspecialchars($cliente['bairro']) ?>">
             <span id="error-bairro" class="error-span font-1-xs" style="display: none;">Bairro inválido!</span>
           </fieldset>
           <fieldset>
             <label class="font-1-s" for="cidade">Cidade<span class="required"> *</span></label>
-            <input id="cidade" class="font-1-xs" type="text" name="cidade" placeholder="Cidade">
+            <input id="cidade" class="font-1-xs" type="text" name="cidade" placeholder="Cidade" value="<?= htmlspecialchars($cliente['cidade']) ?>">
             <span id="error-cidade" class="error-span font-1-xs" style="display: none;">Cidade inválida!</span>
           </fieldset>
           <fieldset> 
             <label class="font-1-s" for="estado">Estado<span class="required"> *</span></label>
-            <input id="estado" class="font-1-xs" type="text" name="estado" placeholder="Estado">
+            <input id="estado" class="font-1-xs" type="text" name="estado" placeholder="Estado" value="<?= htmlspecialchars($cliente['estado']) ?>">
             <span id="error-estado" class="error-span font-1-xs" style="display: none;">Estado inválido!</span>
           </fieldset>
         </div>
-        <button type="submit" class="submit-btn font-1-s ">Cadastrar</button>
+        <button type="submit" class="submit-btn font-1-s ">Editar</button>
       </form>
     </section>
     <script>
       const cadastrarForm = document.querySelector(".cadastrar-form");
-      console.log(cadastrarForm);
       cadastrarForm?.addEventListener("submit", validateForm);
 
       // Verifica o parâmetro na URL
@@ -189,11 +216,11 @@
 
       // Se o status for "sucesso", exibe o alerta e limpa o formulário
       if (status === 'sucesso') {
-        alert("Cadastro realizado com sucesso!");
-        document.getElementById('formCadastro').reset();
+        alert("Cadastro editado com sucesso!");
+        document.getElementById('formCadastro')?.reset();
         cadastrarForm?.addEventListener("submit", validateForm);
       } else if (status === 'erro') {
-        alert("Ocorreu um erro ao cadastrar. Tente novamente.");
+        alert("Ocorreu um erro ao editar. Tente novamente.");
         cadastrarForm?.addEventListener("submit", validateForm);
       }
 
@@ -219,12 +246,13 @@
           const value = input.value.trim();
 
           if (campo.obrigatorio && value === "") {
-            console.log(errorSpan)
             errorSpan.textContent = campo.mensagem;
+           
             errorSpan.style.display = "block";
             input.classList.add("input-error");
             isValid = false;
           } else if (campo.regex && !campo.regex.test(value)) {
+            
             errorSpan.textContent = campo.mensagem;
             errorSpan.style.display = "block";
             input.classList.add("input-error");
@@ -248,8 +276,10 @@
           const campo = input.value.trim();
 
           if (campo !== "") {
-            errorSpan.style.display = "none";
-            input.classList.remove("input-error");
+            if(errorSpan) {
+              errorSpan.style.display = "none";
+              input.classList.remove("input-error");
+            }
           }
         });
       });
